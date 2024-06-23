@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - pip install -r requirements.txt
+  build:
+    commands:
+      - python manage.py test
+      - docker build -t bright-ideas-app .
+      - $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 339712707282.dkr.ecr.us-east-1.amazonaws.com)
+      - docker tag bright-ideas-app:latest 339712707282.dkr.ecr.us-east-1.amazonaws.com/bright-ideas-app:latest
+      - docker push 339712707282.dkr.ecr.us-east-1.amazonaws.com/bright-ideas-app:latest
